@@ -1,0 +1,62 @@
+[
+  {
+    "id": 0,
+    "firstName": "Camille",
+    "lastName": "Rodriquez",
+    "courseId": 0
+  },
+  {
+    "id": 1,
+    "firstName": "Hope",
+    "lastName": "Williamson",
+    "courseId": 1
+  },
+  {
+    "id": 2,
+    "firstName": "Burris",
+    "lastName": "Walls",
+    "courseId": 2
+  },
+  {
+    "id": 3,
+    "firstName": "Key",
+    "lastName": "Cole",
+    "courseId": 3
+  },
+  {
+    "id": 4,
+    "firstName": "Eugenia",
+    "lastName": "Klein",
+    "courseId": 0
+  },
+  {
+    "id": 5,
+    "firstName": "Patton",
+    "lastName": "Freeman",
+    "courseId": 1
+  },
+  {
+    "id": 6,
+    "firstName": "Ballard",
+    "lastName": "Sexton",
+    "courseId": 2
+  },
+  {
+    "id": 7,
+    "firstName": "Sybil",
+    "lastName": "Estes",
+    "courseId": 3
+  },
+  {
+    "id": 8,
+    "firstName": "Nielsen",
+    "lastName": "Bright",
+    "courseId": 0
+  },
+  {
+    "id": 9,
+    "firstName": "Cobb",
+    "lastName": "Washington",
+    "courseId": 1
+  }
+]

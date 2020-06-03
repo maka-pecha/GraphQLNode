@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "name": "ReactJS",
+    "description": "The main objective of this React Certification course is to help you become familiar with the process and gain the skills you'll need to become a professional React developer. You will learn the fundamentals of React through self-paced and instructor-led training to understand and build React components and structure applications with Redux."
+  },
+  {
+    "id": 1,
+    "name": "NodeJS",
+    "description": "The Node JS certification training course helps you gain an in-depth knowledge of concepts such as Express.js, Node Packet Manager (NPM), shrink-wrap, NPM Vet, REST, Express.js with MongoDB, and SQLite CRUD operations. This Node JS training focuses on the essential concepts of Node JS and provides hands-on experience in building an HTTP server."
+  },
+  {
+    "id": 2,
+    "name": "DevOps",
+    "description": "The DevOps training helps you become an expert in the principles of continuous development and deployment, automation of configuration management, inter-team collaboration, and IT service agility, using DevOps tools like Git, Docker, Jenkins, Cucumber, Ansible, TeamCity, and Nagios. You will learn about various aspects of the DevOps delivery model."
+  },
+  {
+    "id": 3,
+    "name": "AWS Big Data",
+    "description": "In this Big Data on AWS certification course, you will become familiar with the concepts of cloud computing and its deployment models. This course covers Amazon’s AWS cloud platform, Kinesis Analytics, AWS big data storage, processing, analysis, visualization and security services, machine learning algorithms and much more."
+  }
+]
