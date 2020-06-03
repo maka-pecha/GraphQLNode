@@ -16,7 +16,7 @@ const students = require('../data/Students');
 const courses = require('../data/Courses');
 const grades = require('../data/Grades');
 
-//----------------SCHEMAS-------------------------------------
+/**----------------SCHEMAS----------------**/
 
 const CourseType = new GraphQLObjectType({
   name: 'Course',
@@ -68,7 +68,7 @@ const GradeType = new GraphQLObjectType({
   })
 });
 
-//----------------ROOTS QUERYS-----------------------------------------
+/**----------------ROOTS QUERYS----------------**/
 
 const RootQueryType = new GraphQLObjectType({
   name: 'Query',
@@ -120,7 +120,7 @@ const RootMutationType = new GraphQLObjectType({
   name: 'Mutation',
   description: 'Root Mutation',
   fields: () => ({
-//-------------ADDS-------------------------------
+/**---------------ADDS----------------**/
     addStudent: {
       type: StudentType,
       description: 'Add a Student',
@@ -141,7 +141,7 @@ const RootMutationType = new GraphQLObjectType({
           students.push(student);
           return student;
         } else {
-          return new GraphQLError('courseId not found on Database');
+          return new GraphQLError(`Course with id ${args.courseId} is not found on Database`);
         }
       }
     },
@@ -171,14 +171,17 @@ const RootMutationType = new GraphQLObjectType({
         grade: { type: GraphQLNonNull(GraphQLInt) },
       },
       resolve: (parent, args) => {
+        //para hacer un correcto manejo de errores por cada caso me valido si:
+        //existe el curso - existe el alumno - si el alumno esta inscripto al curso - si la nota de ese curso para ese alumno ya fue puesta (en ese caso hacer updateGrade)
         const courseExist = courses.find(course => args.courseId === course.id);
         const studentExist = students.find(student => args.studentId === student.id);
+        const studentExistAndCourse = students.find(student => (args.studentId === student.id && args.courseId === student.courseId));
         const gradeExist = grades.find(grade =>
           (args.courseId === grade.courseId && args.studentId === grade.studentId)
         );
-        if(courseExist && studentExist) {
+        if(courseExist && studentExist && studentExistAndCourse) {
           if(gradeExist) {
-            return new GraphQLError({ error: "The Grade already exists", currentData: gradeExist });
+            return new GraphQLError({ error: `Grade for Student id ${args.studentId} of Course id ${args.courseId} already exists, it can be updated with 'updateGrade'`, currentData: gradeExist });
           } else {
             const grade = {
               id: grades[grades.length - 1].id + 1,
@@ -190,13 +193,15 @@ const RootMutationType = new GraphQLObjectType({
             return grade;
           }
         } else if(!courseExist) {
-          return new GraphQLError('courseId not found on Database');
+          return new GraphQLError(`Course with id ${args.courseId} not found on Database`);
         } else if(!studentExist) {
-          return new GraphQLError('studentId not found on Database');
+          return new GraphQLError(`Student with id ${args.studentId} not found on Database`);
+        } else if(!studentExistAndCourse) {
+          return new GraphQLError(`The Student with id ${args.studentId} not be inscripted in the Course ${args.courseId}`);
         }
       }
     },
-//-------------UPDATES-------------------------------
+/**---------------UPDATES----------------**/
     updateStudent: {
       type: StudentType,
       description: 'Update a Student',
@@ -211,7 +216,7 @@ const RootMutationType = new GraphQLObjectType({
         const courseExist = courses.find(course => args.courseId === course.id);
         if(studentExist) {
           if(!courseExist) {
-            return new GraphQLError('courseId not found on Database');
+            return new GraphQLError(`Course with id ${args.courseId} is not found on Database`);
           } else {
             const student = {
               id: args.id,
@@ -246,7 +251,7 @@ const RootMutationType = new GraphQLObjectType({
           Object.assign(courseExist, course);
           return courseExist;
         }  else {
-          return new GraphQLError(`The Course with id ${args.id} is not found on Database`);
+          return new GraphQLError(`Course with id ${args.id} is not found on Database`);
         }
       }
     },
@@ -273,15 +278,15 @@ const RootMutationType = new GraphQLObjectType({
             Object.assign(gradeExist, grade);
             return gradeExist;
           } else if(!courseExist) {
-            return new GraphQLError('courseId not found on Database');
+            return new GraphQLError(`Course with id ${args.courseId} is not found on Database`);
           } else if(!studentExist) {
-            return new GraphQLError('studentId not found on Database');
+            return new GraphQLError(`Student with id ${args.studentId} is not found on Database`);
           } else {
-            return new GraphQLError(`The Grade with id ${args.id} is not found on Database`);
+            return new GraphQLError(`Grade with id ${args.id} is not found on Database`);
           }
       }
     },
-//-------------DELETES-------------------------------
+/**---------------DELETES----------------**/
     deleteStudent: {
       type: StudentType,
       description: 'Delete a Student',
@@ -290,7 +295,7 @@ const RootMutationType = new GraphQLObjectType({
       },
       resolve: (parent, args) => {
         const studentExist = students.find(student => args.id === student.id);
-        if(!studentExist) return new GraphQLError(`The Student with id ${args.id} is not found on Database`);
+        if(!studentExist) return new GraphQLError(`Student with id ${args.id} is not found on Database`);
         _.remove(students, (student) => {
           return student.id === args.id;
         });
@@ -305,8 +310,8 @@ const RootMutationType = new GraphQLObjectType({
       resolve: (parent, args) => {
         const courseExist = courses.find(course => args.id === course.id);
         const studentExist = students.find(student => args.id === student.courseId);
-        if(!courseExist) return new GraphQLError(`The Course with id ${args.id} is not found on Database`);
-        if(studentExist) return new GraphQLError(`The Course with id ${args.id} has Students asociated. It should not be deleted. It can be used 'deleteCourseWithAllStudents'`);
+        if(!courseExist) return new GraphQLError(`Course with id ${args.id} is not found on Database`);
+        if(studentExist) return new GraphQLError(`Course with id ${args.id} has Students asociated. It should not be deleted. It can be used 'deleteCourseWithAllStudents'`);
         _.remove(courses, (course) => {
           return course.id === args.id;
         });
@@ -320,7 +325,7 @@ const RootMutationType = new GraphQLObjectType({
       },
       resolve: (parent, args) => {
         const gradeExist = grades.find(grade => args.id === grade.id);
-        if(!gradeExist) return new GraphQLError(`The Grade with id ${args.id} is not found on Database`);
+        if(!gradeExist) return new GraphQLError(`Grade with id ${args.id} is not found on Database`);
         _.remove(grades, (grade) => {
           return grade.id === args.id;
         });
@@ -328,13 +333,13 @@ const RootMutationType = new GraphQLObjectType({
     },
     deleteCourseWithAllStudents: {
       type: CourseType,
-      description: 'Delete a Course',
+      description: 'Delete a Course with all Students',
       args: {
         id: { type: GraphQLNonNull(GraphQLInt) },
       },
       resolve: (parent, args) => {
         const courseExist = courses.find(course => args.id === course.id);
-        if(!courseExist) return new GraphQLError(`The Course with id ${args.id} is not found on Database`);
+        if(!courseExist) return new GraphQLError(`Course with id ${args.id} is not found on Database`);
         _.remove(students, (student) => {
           return student.courseId === args.id;
         });
