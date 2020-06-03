@@ -12,9 +12,9 @@ const {
   GraphQLInt,
 } = require('graphql');
 
-const students = require('../Students');
-const courses = require('../Courses');
-const grades = require('../Grades');
+const students = require('../data/Students');
+const courses = require('../data/Courses');
+const grades = require('../data/Grades');
 
 //----------------SCHEMAS-------------------------------------
 
